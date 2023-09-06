@@ -48,11 +48,11 @@ jobs:
       - name: get latest tag of ser2net
         id: latest_tag
         working-directory: ser2net
-        run: echo "LATEST_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1) | sed s/^v//)" >> $GITHUB_OUTPUT
+        run: echo "LATEST_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
 
       - name: checkout the latest tag of ser2net
         working-directory: ser2net
-        run: git checkout v${{ steps.latest_tag.outputs.LATEST_VERSION }}
+        run: git checkout ${{ steps.latest_tag.outputs.LATEST_VERSION }}
 
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
@@ -85,6 +85,11 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=semver,pattern={{version}},value=${{ steps.latest_tag.outputs.LATEST_VERSION }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.latest_tag.outputs.LATEST_VERSION }}
+            type=semver,pattern={{major}},value=${{ steps.latest_tag.outputs.LATEST_VERSION }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -97,12 +102,9 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ${{ steps.meta.outputs.tags }}
-            ghcr.io/elmarx/ser2net:latest
-            ghcr.io/elmarx/ser2net:${{ steps.latest_tag.outputs.LATEST_VERSION }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
