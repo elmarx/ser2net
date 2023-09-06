@@ -77,6 +77,8 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/cminyard/ser2net
           tags: |
             type=raw,value=latest
             type=semver,pattern={{version}},value=${{ steps.latest_tag.outputs.LATEST_VERSION }}
