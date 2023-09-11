@@ -21,3 +21,5 @@ RUN apt-get update -q && \
   apt-get install --no-install-recommends --yes libgensio4 libyaml-0-2 && \
   rm -rf /var/lib/apt/lists/*
 COPY --from=builder /opt/ser2net /opt/ser2net
+
+CMD ser2net -d 
