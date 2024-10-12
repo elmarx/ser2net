@@ -20,7 +20,7 @@ connection: &con01
     kickolduser: true
 ```
 
-Mount it to ``/etc/ser2net/ser2net.yaml`, mount `/dev/ttyACM0`, and add the privileged flag.
+Mount it to `/etc/ser2net/ser2net.yaml`, mount `/dev/ttyACM0`, and add the privileged flag.
 
 ## Kubernetes
 
@@ -98,5 +98,3 @@ kind: ConfigMap
 metadata:
   name: ser2net
 ```
-
-
