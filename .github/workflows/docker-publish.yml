@@ -101,7 +101,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - uses: actions/delete-package-versions@v4
+      - uses: actions/delete-package-versions@v5
         with: 
           package-name: ser2net
           package-type: 'container'
